@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Tracking</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Library Scanner -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+    <h1>DevLog</h1>
+    <p style="text-align:center;color:#64748b;">
+        MWH Nganjuk Device Loan & Return Log
+    </p>
+</div>
+
+    <label>Nama Operator</label>
+    <input type="text" id="operator" readonly>
+
+    <button id="scanOperator">
+        Scan Nama Operator
+    </button>
+
+    <label>Device Handphone</label>
+    <input type="text" id="deviceHandphone" readonly>
+
+    <button id="scanDeviceHandphone">
+        Scan Device Handphone
+    </button>
+
+    <label>Device Scanner</label>
+    <input type="text" id="deviceScanner" readonly>
+
+    <button id="scanDeviceScanner">
+        Scan Device Scanner
+    </button>
+
+    <label>Status</label>
+    <select id="status">
+        <option value="AMBIL">PEMINJAMAN</option>
+        <option value="KEMBALI">PENGEMBALIAN</option>
+    </select>
+
+    <button id="submit">
+        SUBMIT
+    </button>
+
+    <hr>
+
+    <div id="reader"></div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
