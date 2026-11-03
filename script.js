@@ -1,98 +1,87 @@
 let html5QrCode = null;
 let currentField = "";
+let isScanning = false;
+
+/* =========================
+   START SCAN
+========================= */
 
 async function startScan(fieldId) {
 
+    if (isScanning) {
+        return;
+    }
+
     currentField = fieldId;
 
-    document.getElementById("reader").innerHTML = "";
+    const modal =
+        document.getElementById("scannerModal");
 
-    html5QrCode = new Html5Qrcode("reader");
+    modal.style.display = "block";
 
     try {
 
+        html5QrCode =
+            new Html5Qrcode("reader");
+
+        isScanning = true;
+
         await html5QrCode.start(
-            { facingMode: "environment" },
+            {
+                facingMode: "environment"
+            },
             {
                 fps: 10,
                 qrbox: 250
             },
-            async (decodedText) => {
-
-                // Isi field sesuai tombol yang ditekan
-                document.getElementById(fieldId).value =
-                    decodedText;
-
-                // Update tampilan
-                if(fieldId === "operator"){
-                    document.getElementById("operatorView").textContent =
-                        decodedText;
-                }
-
-                if(fieldId === "deviceHandphone"){
-                    document.getElementById("hpView").textContent =
-                        decodedText;
-                }
-
-                if(fieldId === "deviceScanner"){
-                    document.getElementById("scannerView").textContent =
-                        decodedText;
-                }
-
-                // Kamera mati setelah berhasil scan
-                await html5QrCode.stop();
-                await html5QrCode.clear();
-
-                html5QrCode = null;
-
-                document.getElementById("reader").innerHTML = "";
-
-            },
-            (error) => {
-                // abaikan
-            }
+            onScanSuccess,
+            onScanFailure
         );
 
-    } catch(err) {
+    } catch (error) {
 
-        console.error(err);
+        console.error(error);
+
+        modal.style.display = "none";
+
         alert("Gagal membuka kamera");
 
+        isScanning = false;
+
     }
+
 }
+
+/* =========================
+   SCAN SUCCESS
+========================= */
+
 async function onScanSuccess(decodedText) {
 
+    if (!isScanning) {
+        return;
+    }
+
+    isScanning = false;
+
+    // Isi field sesuai tombol scan
     document.getElementById(currentField).value =
         decodedText;
 
-    // Update tampilan ringkasan
-    if (currentField === "operator") {
-
-        document.getElementById("operatorView")
-        .textContent = decodedText;
-
-    }
-
-    if (currentField === "deviceHandphone") {
-
-        document.getElementById("hpView")
-        .textContent = decodedText;
-
-    }
-
-    if (currentField === "deviceScanner") {
-
-        document.getElementById("scannerView")
-        .textContent = decodedText;
-
-    }
+    // Tutup modal lebih dulu
+    document.getElementById("scannerModal")
+        .style.display = "none";
 
     try {
 
-        await html5QrCode.stop();
-        await html5QrCode.clear();
+        if (html5QrCode) {
 
-        html5QrCode = null;
+            await html5QrCode.stop();
+            await html5QrCode.clear();
+
+            html5QrCode = null;
+
+        }
 
     } catch (error) {
 
@@ -100,29 +89,81 @@ async function onScanSuccess(decodedText) {
 
     }
 
-}
+    // Bersihkan area reader
+    document.getElementById("reader").innerHTML = "";
 
-function onScanFailure(error) {
-    // Kosongkan saja
 }
 
 /* =========================
-   TOMBOL SCAN
+   SCAN FAILURE
 ========================= */
 
-document.getElementById("scanOperator")
+function onScanFailure(error) {
+
+    // biarkan kosong
+
+}
+
+/* =========================
+   CLOSE SCANNER
+========================= */
+
+document
+.getElementById("closeScanner")
+.addEventListener("click", async () => {
+
+    document.getElementById("scannerModal")
+        .style.display = "none";
+
+    try {
+
+        if (html5QrCode) {
+
+            await html5QrCode.stop();
+            await html5QrCode.clear();
+
+            html5QrCode = null;
+
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+
+    isScanning = false;
+
+    document.getElementById("reader").innerHTML = "";
+
+});
+
+/* =========================
+   BUTTON SCAN
+========================= */
+
+document
+.getElementById("scanOperator")
 .addEventListener("click", () => {
+
     startScan("operator");
+
 });
 
-document.getElementById("scanDeviceHandphone")
+document
+.getElementById("scanDeviceHandphone")
 .addEventListener("click", () => {
+
     startScan("deviceHandphone");
+
 });
 
-document.getElementById("scanDeviceScanner")
+document
+.getElementById("scanDeviceScanner")
 .addEventListener("click", () => {
+
     startScan("deviceScanner");
+
 });
 
 /* =========================
@@ -143,7 +184,6 @@ function submitData() {
     const status =
         document.getElementById("status").value;
 
-    // Validasi
     if (
         !operator ||
         !deviceHandphone ||
@@ -162,7 +202,7 @@ function submitData() {
     form.method = "POST";
 
     form.action =
-    "https://script.google.com/macros/s/AKfycbz_bf60XkLRA5IhVyxFh5R5OaOFlk7sXgQlnhFsRkRKQpd2lDIwwUYRJLBb-k9RLjBXiQ/exec";
+        "https://script.google.com/macros/s/AKfycbz_bf60XkLRA5IhVyxFh5R5OaOFlk7sXgQlnhFsRkRKQpd2lDIwwUYRJLBb-k9RLjBXiQ/exec";
 
     form.target = "hiddenFrame";
 
@@ -208,15 +248,6 @@ function resetForm() {
     document.getElementById("deviceHandphone").value = "";
     document.getElementById("deviceScanner").value = "";
 
-    document.getElementById("operatorView")
-    .textContent = "-";
-
-    document.getElementById("hpView")
-    .textContent = "-";
-
-    document.getElementById("scannerView")
-    .textContent = "-";
-
     currentField = "";
 
     if (html5QrCode) {
@@ -233,11 +264,10 @@ function resetForm() {
     }
 
     document.getElementById("reader").innerHTML = "";
-
 }
 
 /* =========================
-   TOMBOL SUBMIT
+   SUBMIT BUTTON
 ========================= */
 
 document
