@@ -1,33 +1,15 @@
 let html5QrCode = null;
 let currentField = "";
 
-/* =========================
-   SCANNER
-========================= */
-
 async function startScan(fieldId) {
 
     currentField = fieldId;
 
+    document.getElementById("reader").innerHTML = "";
+
+    html5QrCode = new Html5Qrcode("reader");
+
     try {
-
-        // Tutup scanner lama jika masih ada
-        if (html5QrCode) {
-
-            try {
-                await html5QrCode.stop();
-            } catch (e) {}
-
-            try {
-                await html5QrCode.clear();
-            } catch (e) {}
-
-            html5QrCode = null;
-        }
-
-        document.getElementById("reader").innerHTML = "";
-
-        html5QrCode = new Html5Qrcode("reader");
 
         await html5QrCode.start(
             { facingMode: "environment" },
@@ -35,19 +17,49 @@ async function startScan(fieldId) {
                 fps: 10,
                 qrbox: 250
             },
-            onScanSuccess,
-            onScanFailure
+            async (decodedText) => {
+
+                // Isi field sesuai tombol yang ditekan
+                document.getElementById(fieldId).value =
+                    decodedText;
+
+                // Update tampilan
+                if(fieldId === "operator"){
+                    document.getElementById("operatorView").textContent =
+                        decodedText;
+                }
+
+                if(fieldId === "deviceHandphone"){
+                    document.getElementById("hpView").textContent =
+                        decodedText;
+                }
+
+                if(fieldId === "deviceScanner"){
+                    document.getElementById("scannerView").textContent =
+                        decodedText;
+                }
+
+                // Kamera mati setelah berhasil scan
+                await html5QrCode.stop();
+                await html5QrCode.clear();
+
+                html5QrCode = null;
+
+                document.getElementById("reader").innerHTML = "";
+
+            },
+            (error) => {
+                // abaikan
+            }
         );
 
-    } catch (error) {
+    } catch(err) {
 
-        console.error(error);
+        console.error(err);
         alert("Gagal membuka kamera");
 
     }
-
 }
-
 async function onScanSuccess(decodedText) {
 
     document.getElementById(currentField).value =
@@ -98,20 +110,17 @@ function onScanFailure(error) {
    TOMBOL SCAN
 ========================= */
 
-document
-.getElementById("scanOperator")
+document.getElementById("scanOperator")
 .addEventListener("click", () => {
     startScan("operator");
 });
 
-document
-.getElementById("scanDeviceHandphone")
+document.getElementById("scanDeviceHandphone")
 .addEventListener("click", () => {
     startScan("deviceHandphone");
 });
 
-document
-.getElementById("scanDeviceScanner")
+document.getElementById("scanDeviceScanner")
 .addEventListener("click", () => {
     startScan("deviceScanner");
 });
