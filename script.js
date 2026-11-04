@@ -291,7 +291,7 @@ function submitData() {
     form.method = "POST";
 
     form.action =
-    "https://script.google.com/macros/s/AKfycbyGl2TUQ0cEmIQc8q5qYRYOx_XG1rla2QE85vBJjhxYFSE4YOSp-QZVP2IHp_RQoPU6aw/exec"
+    "https://script.google.com/macros/s/AKfycbwbbPLC1w4CpgMiSyFGLxkn7r4wq_YBhJeEtdcw_mJcZWMLidSVGMBFU1yeStq8LdKdJQ/exec"
     form.target = "hiddenFrame";
 
     const fields = {
