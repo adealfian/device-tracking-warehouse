@@ -47,9 +47,7 @@ async function startScan(fieldId) {
         alert("Gagal membuka kamera");
 
         isScanning = false;
-
     }
-
 }
 
 /* =========================
@@ -64,11 +62,9 @@ async function onScanSuccess(decodedText) {
 
     isScanning = false;
 
-    // Isi field sesuai tombol scan
     document.getElementById(currentField).value =
         decodedText;
 
-    // Tutup modal lebih dulu
     document.getElementById("scannerModal")
         .style.display = "none";
 
@@ -80,7 +76,6 @@ async function onScanSuccess(decodedText) {
             await html5QrCode.clear();
 
             html5QrCode = null;
-
         }
 
     } catch (error) {
@@ -89,9 +84,7 @@ async function onScanSuccess(decodedText) {
 
     }
 
-    // Bersihkan area reader
     document.getElementById("reader").innerHTML = "";
-
 }
 
 /* =========================
@@ -99,9 +92,7 @@ async function onScanSuccess(decodedText) {
 ========================= */
 
 function onScanFailure(error) {
-
-    // biarkan kosong
-
+    // kosong
 }
 
 /* =========================
@@ -123,7 +114,6 @@ document
             await html5QrCode.clear();
 
             html5QrCode = null;
-
         }
 
     } catch (error) {
@@ -135,7 +125,6 @@ document
     isScanning = false;
 
     document.getElementById("reader").innerHTML = "";
-
 });
 
 /* =========================
@@ -166,6 +155,56 @@ document
 
 });
 
+
+/* =========================
+   DEVICE TYPE
+========================= */
+
+document
+.getElementById("deviceType")
+.addEventListener("change", function(){
+
+    const type = this.value;
+
+    const hpSection =
+        document.getElementById("hpSection");
+
+    const scannerSection =
+        document.getElementById("scannerSection");
+
+    if(type === "SCANNER"){
+
+        hpSection.style.display = "none";
+        scannerSection.style.display = "block";
+
+        document.getElementById("deviceHandphone")
+        .value = "";
+
+    }
+    else if(type === "HANDPHONE"){
+
+        hpSection.style.display = "block";
+        scannerSection.style.display = "none";
+
+        document.getElementById("deviceScanner")
+        .value = "";
+
+    }
+    else if(type === "SCANNER_HP"){
+
+        hpSection.style.display = "block";
+        scannerSection.style.display = "block";
+
+    }
+    else{
+
+        hpSection.style.display = "block";
+        scannerSection.style.display = "block";
+
+    }
+
+});
+
 /* =========================
    SUBMIT DATA
 ========================= */
@@ -174,6 +213,12 @@ function submitData() {
 
     const operator =
         document.getElementById("operator").value;
+
+    const shift =
+        document.getElementById("shift").value;
+
+    const deviceType =
+        document.getElementById("deviceType").value;
 
     const deviceHandphone =
         document.getElementById("deviceHandphone").value;
@@ -184,14 +229,58 @@ function submitData() {
     const status =
         document.getElementById("status").value;
 
-    if (
-        !operator ||
-        !deviceHandphone ||
+    /* VALIDASI */
+
+    if(!operator){
+
+        alert("Scan Operator terlebih dahulu");
+        return;
+
+    }
+
+    if(!shift){
+
+    alert("Pilih Shift");
+    return;
+
+    }
+
+    if(!deviceType){
+
+        alert("Pilih Jenis Device");
+        return;
+
+    }
+
+    if(
+        deviceType === "SCANNER" &&
         !deviceScanner
-    ) {
+    ){
 
-        alert("Lengkapi semua scan terlebih dahulu");
+        alert("Scan Device Scanner");
+        return;
 
+    }
+
+    if(
+        deviceType === "HANDPHONE" &&
+        !deviceHandphone
+    ){
+
+        alert("Scan Device Handphone");
+        return;
+
+    }
+
+    if(
+        deviceType === "SCANNER_HP" &&
+        (
+            !deviceHandphone ||
+            !deviceScanner
+        )
+    ){
+
+        alert("Scan Device Handphone dan Scanner");
         return;
 
     }
@@ -202,16 +291,18 @@ function submitData() {
     form.method = "POST";
 
     form.action =
-        "https://script.google.com/macros/s/AKfycbz_bf60XkLRA5IhVyxFh5R5OaOFlk7sXgQlnhFsRkRKQpd2lDIwwUYRJLBb-k9RLjBXiQ/exec";
-
+    "https://script.google.com/macros/s/AKfycbyGl2TUQ0cEmIQc8q5qYRYOx_XG1rla2QE85vBJjhxYFSE4YOSp-QZVP2IHp_RQoPU6aw/exec"
     form.target = "hiddenFrame";
 
     const fields = {
         operator,
+        shift,
+        deviceType,
         deviceHandphone,
         deviceScanner,
         status
     };
+
 
     Object.keys(fields).forEach(key => {
 
@@ -235,7 +326,6 @@ function submitData() {
     alert("Data berhasil disimpan");
 
     resetForm();
-
 }
 
 /* =========================
@@ -245,8 +335,16 @@ function submitData() {
 function resetForm() {
 
     document.getElementById("operator").value = "";
+    document.getElementById("shift").value = "";
     document.getElementById("deviceHandphone").value = "";
     document.getElementById("deviceScanner").value = "";
+    document.getElementById("deviceType").value = "";
+
+    document.getElementById("hpSection")
+    .style.display = "block";
+
+    document.getElementById("scannerSection")
+    .style.display = "block";
 
     currentField = "";
 
@@ -263,7 +361,8 @@ function resetForm() {
         html5QrCode = null;
     }
 
-    document.getElementById("reader").innerHTML = "";
+    document.getElementById("reader")
+    .innerHTML = "";
 }
 
 /* =========================
