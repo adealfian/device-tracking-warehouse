@@ -5,48 +5,102 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Device Loan & Return Log</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2">
 
     <!-- Library Scanner -->
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 </head>
+
 <body>
 
 <div class="container">
 
     <div class="header">
-    <h1>DevLog</h1>
-    <p style="text-align:center;color:#64748b;">
-        MWH Nganjuk Device Loan & Return Log
-    </p>
-</div>
+        <h1>DevLog</h1>
+        <p style="text-align:center;color:#64748b;">
+            MWH Nganjuk Device Loan & Return Log
+        </p>
+    </div>
+
+    <!-- OPERATOR -->
 
     <label>Nama Operator</label>
+
     <input type="text" id="operator" readonly>
 
     <button id="scanOperator">
         Scan Nama Operator
     </button>
 
-    <label>Device Handphone</label>
-    <input type="text" id="deviceHandphone" readonly>
+    <!-- KODE SHIFT -->
 
-    <button id="scanDeviceHandphone">
-        Scan Device Handphone
-    </button>
+    <label>Kode Shift</label>
+    <select id="shift">
+        <option value="">Pilih Shift</option>
+        <option value="SHIFT1">SHIFT 1</option>
+        <option value="SHIFT2">SHIFT 2</option>
+    </select>
 
-    <label>Device Scanner</label>
-    <input type="text" id="deviceScanner" readonly>
+    <!-- JENIS DEVICE -->
 
-    <button id="scanDeviceScanner">
-        Scan Device Scanner
-    </button>
+    <label>Jenis Device</label>
+
+    <select id="deviceType">
+        <option value="">Pilih Device</option>
+        <option value="SCANNER">Scanner</option>
+        <option value="HANDPHONE">Handphone</option>
+        <option value="SCANNER_HP">Scanner + Handphone</option>
+    </select>
+
+    <!-- HANDPHONE -->
+
+    <div id="hpSection">
+
+        <label>Device Handphone</label>
+
+        <input
+            type="text"
+            id="deviceHandphone"
+            readonly>
+
+        <button id="scanDeviceHandphone">
+            Scan Asset Code Handphone
+        </button>
+
+    </div>
+
+    <!-- SCANNER -->
+
+    <div id="scannerSection">
+
+        <label>Device Scanner</label>
+
+        <input
+            type="text"
+            id="deviceScanner"
+            readonly>
+
+        <button id="scanDeviceScanner">
+            Scan Asset Code Scanner
+        </button>
+
+    </div>
+
+    <!-- STATUS -->
 
     <label>Status</label>
+
     <select id="status">
-        <option value="AMBIL">PEMINJAMAN</option>
-        <option value="KEMBALI">PENGEMBALIAN</option>
+        <option value="AMBIL">
+            PEMINJAMAN
+        </option>
+
+        <option value="KEMBALI">
+            PENGEMBALIAN
+        </option>
     </select>
+
+    <!-- SUBMIT -->
 
     <button id="submit">
         SUBMIT
@@ -54,19 +108,26 @@
 
     <hr>
 
-    <div id="scannerModal" class="scanner-modal">
+</div>
+
+<!-- SCANNER MODAL -->
+
+<div id="scannerModal"
+     class="scanner-modal">
 
     <div class="scanner-header">
+
         <button id="closeScanner">
             ✕ Tutup
         </button>
+
     </div>
 
     <div id="reader"></div>
 
 </div>
 
-<script src="script.js"></script>
+<script src="script.js?v=2"></script>
 
 </body>
 </html>
