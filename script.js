@@ -131,13 +131,6 @@ document
    BUTTON SCAN
 ========================= */
 
-document
-.getElementById("scanOperator")
-.addEventListener("click", () => {
-
-    startScan("operator");
-
-});
 
 document
 .getElementById("scanDeviceHandphone")
@@ -212,7 +205,9 @@ document
 function submitData() {
 
     const operator =
-        document.getElementById("operator").value;
+        document.getElementById("operator")
+        .value
+        .toUpperCase();
 
     const shift =
         document.getElementById("shift").value;
@@ -233,7 +228,7 @@ function submitData() {
 
     if(!operator){
 
-        alert("Scan Operator terlebih dahulu");
+        alert("Masukkan Nama Operator");
         return;
 
     }
