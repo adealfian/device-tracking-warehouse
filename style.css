@@ -45,7 +45,8 @@ h1{
 
 #shift,
 #deviceType,
-#status{
+#status,
+#picType{
     width:100%;
     padding:14px;
     border:2px solid #2563eb;
