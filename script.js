@@ -345,6 +345,7 @@ function resetForm() {
     document.getElementById("deviceHandphone").value = "";
     document.getElementById("deviceScanner").value = "";
     document.getElementById("deviceType").value = "";
+    document.getElementById("picType").value = "";
 
     document.getElementById("hpSection")
     .style.display = "block";
