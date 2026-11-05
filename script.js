@@ -215,6 +215,9 @@ function submitData() {
     const deviceType =
         document.getElementById("deviceType").value;
 
+    const picType =
+        document.getElementById("picType").value;
+
     const deviceHandphone =
         document.getElementById("deviceHandphone").value;
 
@@ -236,6 +239,13 @@ function submitData() {
     if(!shift){
 
     alert("Pilih Shift");
+    return;
+
+    }
+
+    if(!picType){
+
+    alert("Pilih PIC Device");
     return;
 
     }
@@ -286,16 +296,17 @@ function submitData() {
     form.method = "POST";
 
     form.action =
-    "https://script.google.com/macros/s/AKfycbwt_8rHMGHdZCrUKrimt80J9mi96FCKzxW2mLP9Izm5CzVhtdiIepPt24d19jOHwRVe9Q/exec"
+    "https://script.google.com/macros/s/AKfycbwDtVTdPA4B7TSUTypfuXJYKlLJE-UuBFfpN7_xb2qWQ5F37OcDz9uFu4s9zsgT3hhM/exec";
     form.target = "hiddenFrame";
 
     const fields = {
-        operator,
-        shift,
-        deviceType,
-        deviceHandphone,
-        deviceScanner,
-        status
+    operator,
+    shift,
+    picType,
+    deviceType,
+    deviceHandphone,
+    deviceScanner,
+    status
     };
 
 
